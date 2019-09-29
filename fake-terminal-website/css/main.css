@@ -9,7 +9,7 @@ html, body {
 body {
     font-size: 13pt;
     font-family: monospace;
-    color: white;
+    color: gray;
     background-color: black;
 }
 #container {
@@ -46,7 +46,7 @@ body {
     user-select: none;
 }
 .prompt-color {
-    color: #e09f14;
+    color: cyan;
 }
 .input-line {
     display: -webkit-box;
@@ -89,7 +89,7 @@ body {
     z-index: 9;
     top: 0;
     left: 0;
-    background-color: #e09f14;
+    background-color: green;
     opacity: 0.8;
     overflow-x: hidden;
     transition: 0.3s;
