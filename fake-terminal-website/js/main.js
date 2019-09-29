@@ -43,7 +43,7 @@ var main = (function () {
             accesible_cores: "Accessible cores",
             language: "Language",
             value_token: "<value>",
-            host: "example.com",
+            host: "apz.engineering",
             user: "guest",
             is_root: false,
             type_delay: 1
