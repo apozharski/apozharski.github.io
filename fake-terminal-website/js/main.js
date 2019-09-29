@@ -421,6 +421,10 @@ var main = (function () {
 	this.type(result, this.unlock.bind(this));
     };
 
+    Terminal.prototype.cd = function(cmdComponents) {
+	// TODO: Figure out how to do state changes here.
+    }
+    
     Terminal.prototype.ls = function () {
 	var result = ".\n..\n" + configs.getInstance().welcome_file_name + "\n";
 	for (var file in files.getInstance()) {
