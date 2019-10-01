@@ -43,7 +43,7 @@ var main = (function () {
             accesible_cores: "Accessible cores",
             language: "Language",
             value_token: "<value>",
-            host: "apz.engineering",
+            host: "pozhar.ski",
             user: "anton",
             is_root: false,
             type_delay: 1
@@ -199,8 +199,11 @@ var main = (function () {
     
     var makePrompt = function(user, host, cwd, root) {
 	console.log(cwd);
-	if(arrayEqual(cwd,["", "home", user])) {
-	    cwd = ["~"];
+	if(arrayEqual(cwd.slice(0,3),["", "home", user])) {
+	    var tcwd = ["~"];
+	    if(cwd.length > 3)
+		tcwd.push(cwd.slice(3,cwd.length));
+	    cwd = tcwd.join("/");
 	}
 	else {
 	    cwd = cwd.join("/");
@@ -210,6 +213,10 @@ var main = (function () {
 	return output
     }
 
+    const isObj = function(obj) {
+	return (typeof obj == "object" && obj != null) 
+    }
+    
     const get = (p, o) =>
 	  p.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, o)
 
@@ -217,8 +224,7 @@ var main = (function () {
 	
 	var ftree = filetree.getInstance();
 	var files = get(cwd, ftree);
-	console.log(Object.keys(files))
-	
+	return files;	
     }
     
     var Terminal = function (prompt, cmdLine, output, sidenav, profilePic, user, host, root, outputTimer) {
@@ -493,7 +499,7 @@ var main = (function () {
 	}
 	else
 	{
-	    getLs(this.cwd);
+	    var result = "";
 	    var config = configs.getInstance();
 	    var user = config.user; var host = config.host; var is_root = config.is_root;
 	    if (cmdComponents[1] == "..") {
@@ -503,20 +509,28 @@ var main = (function () {
 		
 	    }
 	    else {
-		this.cwd.push(cmdComponents[1]);
+		var files = getLs(this.cwd);
+		var file = files[cmdComponents[1]];
+		if (isObj(file)) {
+		    this.cwd.push(cmdComponents[1]);
+		}
+		else {
+		    result = "cd: " + cmdComponents[1] + (file == null ? ": No such file or directory" : ": Not a directory");
+		}
 	    }
 	    this.completePrompt = makePrompt(user, host, this.cwd, is_root);
 	}
-	this.type(,this.unlock.bind(this))
+	if (result != "")
+	    this.type(result, this.unlock.bind(this));
+	else
+	    this.unlock();
     }
     
     Terminal.prototype.ls = function () {
-	var result = ".\n..\n" + configs.getInstance().welcome_file_name + "\n";
-	for (var file in files.getInstance()) {
-	    result += file + "\n";
-	}
-	for (var file in downloads.getInstance()) {
-	    result += file + "\n";
+	var result = ".\n..\n";
+	var files = getLs(this.cwd);
+	for (var file of Object.keys(files)) {
+	    result += file.toString() + (isObj(files[file]) ? "/" : "") + "\n";
 	}
 	this.type(result.trim(), this.unlock.bind(this));
     };
