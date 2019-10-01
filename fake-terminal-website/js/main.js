@@ -64,8 +64,8 @@ var main = (function () {
             }
         };
         Singleton.defaultOptions = {
-            "about.txt": "This website was made using only pure JavaScript with no extra libraries.\nI made it dynamic so anyone can use it, just download it from GitHub and change the config text according to your needs.\nIf you manage to find any bugs or security issues feel free to email me: luisbraganca@protonmail.com",
-            "getting_started.txt": "First, go to js/main.js and replace all the text on both singleton vars.\n- configs: All the text used on the website.\n- files: All the fake files used on the website. These files are also used to be listed on the sidenav.\nAlso please notice if a file content is a raw URL, when clicked/concatenated it will be opened on a new tab.\nDon't forget also to:\n- Change the page title on the index.html file\n- Change the website color on the css/main.css\n- Change the images located at the img folder. The suggested sizes are 150x150 for the avatar and 32x32/16x16 for the favicon.",
+            // "about.txt": "This website was made using only pure JavaScript with no extra libraries.\nI made it dynamic so anyone can use it, just download it from GitHub and change the config text according to your needs.\nIf you manage to find any bugs or security issues feel free to email me: luisbraganca@protonmail.com",
+            // "getting_started.txt": "First, go to js/main.js and replace all the text on both singleton vars.\n- configs: All the text used on the website.\n- files: All the fake files used on the website. These files are also used to be listed on the sidenav.\nAlso please notice if a file content is a raw URL, when clicked/concatenated it will be opened on a new tab.\nDon't forget also to:\n- Change the page title on the index.html file\n- Change the website color on the css/main.css\n- Change the images located at the img folder. The suggested sizes are 150x150 for the avatar and 32x32/16x16 for the favicon.",
             "email.txt": "apozharski@gmail.com",
 	    "resume.txt": "TODO: I'll add this later."
         };
@@ -105,15 +105,18 @@ var main = (function () {
             }
         };
         Singleton.defaultOptions = {
-	    "":["home"],
-	    "home":["anton"],
-	    "anton":["welcome_message.txt",
-		     "about.txt",
-		     "getting_started.txt",
-		     "email.txt",
-		     "resume.txt",
-		     "resume.pdf",
-		     "projects"]
+	    "":
+	    {
+		"home":
+		{"anton":
+		 {
+		     "README.txt": "ls, cd, and cat work as expected",
+		     "email.txt":"apozharski@gmail.com",
+		     "resume.txt":"TODO: I'll add this later.",
+		     "resume.pdf":"../files/resume.pdf",
+		     "projects":{}}
+		},
+	    }
         };
         return {
             getInstance: function (downloads) {
@@ -205,6 +208,17 @@ var main = (function () {
 	   
 	(typeof user === "string" && typeof host === "string") && (output = user + "@" + host + ":"+ cwd + (root ? "#" : "$"));
 	return output
+    }
+
+    const get = (p, o) =>
+	  p.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, o)
+
+    var getLs = function(cwd) {
+	
+	var ftree = filetree.getInstance();
+	var files = get(cwd, ftree);
+	console.log(Object.keys(files))
+	
     }
     
     var Terminal = function (prompt, cmdLine, output, sidenav, profilePic, user, host, root, outputTimer) {
@@ -433,6 +447,7 @@ var main = (function () {
             break;
 	case cmds.CD.value:
 	    this.cd(cmdComponents);
+	    break;
 	case cmds.MV.value:
 	case cmds.RMDIR.value:
 	case cmds.RM.value:
@@ -478,6 +493,7 @@ var main = (function () {
 	}
 	else
 	{
+	    getLs(this.cwd);
 	    var config = configs.getInstance();
 	    var user = config.user; var host = config.host; var is_root = config.is_root;
 	    if (cmdComponents[1] == "..") {
@@ -491,7 +507,7 @@ var main = (function () {
 	    }
 	    this.completePrompt = makePrompt(user, host, this.cwd, is_root);
 	}
-	this.unlock()
+	this.type(,this.unlock.bind(this))
     }
     
     Terminal.prototype.ls = function () {
