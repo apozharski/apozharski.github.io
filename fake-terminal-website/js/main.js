@@ -44,7 +44,7 @@ var main = (function () {
             language: "Language",
             value_token: "<value>",
             host: "apz.engineering",
-            user: "guest",
+            user: "anton",
             is_root: false,
             type_delay: 1
         };
@@ -95,8 +95,34 @@ var main = (function () {
             }
         };
     })();
-
-
+    
+    var filetree = (function () {
+        var instance;
+        var Singleton = function (downloads) {
+            var downloads = downloads || Singleton.defaultOptions;
+            for (var key in Singleton.defaultOptions) {
+                this[key] = downloads[key] || Singleton.defaultOptions[key];
+            }
+        };
+        Singleton.defaultOptions = {
+	    "":["home"],
+	    "home":["anton"],
+	    "anton":["welcome_message.txt",
+		     "about.txt",
+		     "getting_started.txt",
+		     "email.txt",
+		     "resume.txt",
+		     "resume.pdf",
+		     "projects"]
+        };
+        return {
+            getInstance: function (downloads) {
+                instance === void 0 && (instance = new Singleton());
+                return instance;
+            }
+        };
+    })();
+    
     /**
      * AUX FUNCTIONS
      */
@@ -157,6 +183,30 @@ var main = (function () {
 	hist: [""]
     }
 
+    function arrayEqual(a, b) {
+	if (a === b) return true;
+	if (a == null || b == null) return false;
+	if (a.length != b.length) return false;
+	
+	for (var i = 0; i < a.length; ++i) {
+	    if (a[i] !== b[i]) return false;
+	}
+	return true;
+    }
+    
+    var makePrompt = function(user, host, cwd, root) {
+	console.log(cwd);
+	if(arrayEqual(cwd,["", "home", user])) {
+	    cwd = ["~"];
+	}
+	else {
+	    cwd = cwd.join("/");
+	}
+	   
+	(typeof user === "string" && typeof host === "string") && (output = user + "@" + host + ":"+ cwd + (root ? "#" : "$"));
+	return output
+    }
+    
     var Terminal = function (prompt, cmdLine, output, sidenav, profilePic, user, host, root, outputTimer) {
         if (!(prompt instanceof Node) || prompt.nodeName.toUpperCase() !== "DIV") {
             throw new InvalidArgumentException("Invalid value " + prompt + " for argument 'prompt'.");
@@ -173,7 +223,8 @@ var main = (function () {
         if (!(profilePic instanceof Node) || profilePic.nodeName.toUpperCase() !== "IMG") {
             throw new InvalidArgumentException("Invalid value " + profilePic + " for argument 'profilePic'.");
         }
-        (typeof user === "string" && typeof host === "string") && (this.completePrompt = user + "@" + host + ":~" + (root ? "#" : "$"));
+	this.cwd = ["", "home", "anton"];
+	this.completePrompt = makePrompt(user, host, this.cwd, root);
         this.profilePic = profilePic;
         this.prompt = prompt;
         this.cmdLine = cmdLine;
@@ -226,7 +277,6 @@ var main = (function () {
         }.bind(this));
         this.reset();
     };
-
 
 
     Terminal.makeElementDisappear = function (element) {
@@ -382,6 +432,7 @@ var main = (function () {
             this.reboot();
             break;
 	case cmds.CD.value:
+	    this.cd(cmdComponents);
 	case cmds.MV.value:
 	case cmds.RMDIR.value:
 	case cmds.RM.value:
@@ -422,7 +473,25 @@ var main = (function () {
     };
 
     Terminal.prototype.cd = function(cmdComponents) {
-	// TODO: Figure out how to do state changes here.
+	if (cmdComponents.length <= 1) {
+	    // TODO: Add usage 
+	}
+	else
+	{
+	    var config = configs.getInstance();
+	    var user = config.user; var host = config.host; var is_root = config.is_root;
+	    if (cmdComponents[1] == "..") {
+		this.cwd.pop();
+	    }
+	    else if (cmdComponents[1] == ".") {
+		
+	    }
+	    else {
+		this.cwd.push(cmdComponents[1]);
+	    }
+	    this.completePrompt = makePrompt(user, host, this.cwd, is_root);
+	}
+	this.unlock()
     }
     
     Terminal.prototype.ls = function () {
