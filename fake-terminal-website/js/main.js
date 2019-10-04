@@ -95,6 +95,29 @@ var main = (function () {
             }
         };
     })();
+
+    var filetable = (function () {
+        var instance;
+        var Singleton = function (downloads) {
+            var downloads = downloads || Singleton.defaultOptions;
+            for (var key in Singleton.defaultOptions) {
+                this[key] = downloads[key] || Singleton.defaultOptions[key];
+            }
+        };
+        Singleton.defaultOptions = {
+	    "README.txt": "text",
+	    "email.txt": "text",
+	    "mailto": "link",
+	    "resume.txt": "text",
+	    "resume.pdf": "link"
+        };
+        return {
+            getInstance: function (downloads) {
+                instance === void 0 && (instance = new Singleton());
+                return instance;
+            }
+        };
+    })();
     
     var filetree = (function () {
         var instance;
@@ -112,6 +135,7 @@ var main = (function () {
 		 {
 		     "README.txt": "ls, cd, and cat work as expected",
 		     "email.txt":"apozharski@gmail.com",
+		     "mailto":"mailto:apozharski@gmail.com",
 		     "resume.txt":"TODO: I'll add this later.",
 		     "resume.pdf":"../files/resume.pdf",
 		     "projects":{}}
@@ -469,6 +493,7 @@ var main = (function () {
 	};
     };
 
+    // TODO: Make cat respect cwd
     Terminal.prototype.cat = function (cmdComponents) {
 	var result;
 	if (cmdComponents.length <= 1) {
