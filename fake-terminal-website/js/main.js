@@ -27,7 +27,7 @@ var main = (function () {
             rmdir_help: "Remove directory, this command will only work if the folders are empty.",
             touch_help: "Change file timestamps. If the file doesn't exist, it's created an empty one.",
             sudo_help: "Execute a command as the superuser.",
-            welcome: "Welcome to FTW (Fake Terminal Website)! :)\nIn order for you to start customizing the texts, go to js/main.js and replace the texts located at the configs var.\nIn that same file, you can define all the fake files you want as well as their content. This files will appear on the sidenav.\nAlso, don't forget to change the colors on the css/main.css file as well as the website title on the index.html file.\nNow in order to get started, feel free to either execute the 'help' command or use the more user-friendly colored sidenav at your left.\nIn order to skip text rolling, double click/touch anywhere.",
+            welcome: "Welcome to my (Anton Pozarskiy) personal website fork of luisbraganca's fake-terminal website. I am currently a 4th year student at the University of Maryland: College Park and will be graduating with a bachelors degree in Computer Science and a bachelors degree in Electrical Engineering in the fall of 2020. My primary interests are in Robotics, Computer Vision, and Controls, along with a penchant for developer productivity. Please note that this website is still a work in progress and my modifications to the original are likely still likely buggy. Enjoy!",
             internet_explorer_warning: "NOTE: I see you're using internet explorer, this website won't work properly.",
             welcome_file_name: "welcome_message.txt",
             invalid_command_message: "<value>: command not found.",
