@@ -27,7 +27,7 @@ var main = (function () {
             rmdir_help: "Remove directory, this command will only work if the folders are empty.",
             touch_help: "Change file timestamps. If the file doesn't exist, it's created an empty one.",
             sudo_help: "Execute a command as the superuser.",
-            welcome: "Welcome to my (Anton Pozarskiy) personal website fork of luisbraganca's fake-terminal website. I am currently a 4th year student at the University of Maryland: College Park and will be graduating with a bachelors degree in Computer Science and a bachelors degree in Electrical Engineering in the fall of 2020. My primary interests are in Robotics, Computer Vision, and Controls, along with a penchant for developer productivity. Please note that this website is still a work in progress and my modifications to the original are likely still likely buggy. Enjoy!",
+            welcome: "Welcome to my (Anton Pozarskiy) personal website. I am currently a PhD candidate at Universität Freiburg working in the Systems Control and Optimization Laboratory under the supervision of Prof. Dr. Moritz Diehl and Dr. Armin Nurkanović. The focus of my work is on the optimal control of nonsmooth systems and numerical solutions to nonsmooth optimization problems. I am one of the core developers of the open source tool for accurate optimal control and simulation of nonsmooth systems, nosnoc.",
             internet_explorer_warning: "NOTE: I see you're using internet explorer, this website won't work properly.",
             welcome_file_name: "welcome_message.txt",
             invalid_command_message: "<value>: command not found.",
@@ -64,8 +64,6 @@ var main = (function () {
             }
         };
         Singleton.defaultOptions = {
-            // "about.txt": "This website was made using only pure JavaScript with no extra libraries.\nI made it dynamic so anyone can use it, just download it from GitHub and change the config text according to your needs.\nIf you manage to find any bugs or security issues feel free to email me: luisbraganca@protonmail.com",
-            // "getting_started.txt": "First, go to js/main.js and replace all the text on both singleton vars.\n- configs: All the text used on the website.\n- files: All the fake files used on the website. These files are also used to be listed on the sidenav.\nAlso please notice if a file content is a raw URL, when clicked/concatenated it will be opened on a new tab.\nDon't forget also to:\n- Change the page title on the index.html file\n- Change the website color on the css/main.css\n- Change the images located at the img folder. The suggested sizes are 150x150 for the avatar and 32x32/16x16 for the favicon.",
             "email.txt": "apozharski@gmail.com",
 	    "resume.txt": "TODO: I'll add this later."
         };
@@ -109,7 +107,11 @@ var main = (function () {
 	    "email.txt": "text",
 	    "mailto": "link",
 	    "resume.txt": "text",
-	    "resume.pdf": "link"
+	    "resume.pdf": "link",
+	    "nosnoc": "link",
+	    "nosnoc_py": "link",
+	    "vdx": "link",
+	    "nosbench": "link",
         };
         return {
             getInstance: function (downloads) {
@@ -133,12 +135,19 @@ var main = (function () {
 		"home":
 		{"anton":
 		 {
-		     "README.txt": "ls, cd, and cat work as expected",
-		     "email.txt":"apozharski@gmail.com",
-		     "mailto":"mailto:apozharski@gmail.com",
-		     "resume.txt":"TODO: I'll add this later.",
-		     "resume.pdf":"../files/resume.pdf",
-		     "projects":{}}
+		     "README.txt":{"content":"ls, cd, and cat work as expected", "type":"text"},
+		     "email.txt":{"content":"anton.pozharskiy@imtek.uni-freiburg.de", "type":"text"},
+		     "mailto":{"content":"mailto:apozharski@gmail.com", "type":"link"},
+		     "resume.txt":{"content":"TODO: I'll add this later.", "type":"text"},
+		     "resume.pdf":{"content":"../files/resume.pdf", "type":"file"},
+		     "projects":
+		     {
+			 "nosnoc":{"content":"https://github.com/nurkanovic/nosnoc","type":"link"},
+			 "nosnoc_py":{"content":"https://github.com/FreyJo/nosnoc_py", "type":"link"},
+			 "vdx":{"content":"https://github.com/apozharski/vdx", "type":"link"},
+			 "nosbench":{"content":"https://github.com/apozharski/nosbench", "type":"link"}
+		     }
+		 }
 		},
 	    }
         };
@@ -248,7 +257,7 @@ var main = (function () {
 	
 	var ftree = filetree.getInstance();
 	var files = get(cwd, ftree);
-	return files;	
+	return files
     }
     
     var Terminal = function (prompt, cmdLine, output, sidenav, profilePic, user, host, root, outputTimer) {
@@ -503,16 +512,29 @@ var main = (function () {
 	} else if (!cmdComponents[1]) {
 	    result = configs.getInstance().file_not_found.replace(configs.getInstance().value_token, cmdComponents[1]);
 	}
-	else if (downloads.getInstance().hasOwnProperty(cmdComponents[1])) {
-	    result = downloads.getInstance()[cmdComponents[1]];
-	    window.open(result);
-	} else if (files.getInstance().hasOwnProperty(cmdComponents[1])){
-	    result = files.getInstance()[cmdComponents[1]]
-	} else if (cmdComponents[1] === configs.getInstance().welcome_file_name)
+	else
 	{
-	    result = configs.getInstance().welcome
-	} else {
-	    result = configs.getInstance().file_not_found.replace(configs.getInstance().value_token, cmdComponents[1]);
+	    obj = getLs(this.cwd.concat([cmdComponents[1]]));
+	    if(obj.hasOwnProperty("type"))
+	    {
+		if(obj.type == "text" || obj.type == "link")
+		{
+		    result = obj.content;
+		}
+		else if (obj.type == "file")
+		{
+		    result = obj.content;
+		    window.open(obj.content);
+		}
+		else
+		{
+		    result = configs.getInstance().file_not_found.replace(configs.getInstance().value_token, cmdComponents[1]);
+		}
+	    }
+	    else
+	    {
+		result = configs.getInstance().file_not_found.replace(configs.getInstance().value_token, cmdComponents[1]);
+	    }
 	}
 	
 	this.type(result, this.unlock.bind(this));
@@ -555,7 +577,7 @@ var main = (function () {
 	var result = ".\n..\n";
 	var files = getLs(this.cwd);
 	for (var file of Object.keys(files)) {
-	    result += file.toString() + (isObj(files[file]) ? "/" : "") + "\n";
+	    result += file.toString() + ((!files[file].hasOwnProperty("type")) ? "/" : "") + "\n";
 	}
 	this.type(result.trim(), this.unlock.bind(this));
     };
