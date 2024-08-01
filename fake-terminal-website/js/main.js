@@ -64,8 +64,8 @@ var main = (function () {
             }
         };
         Singleton.defaultOptions = {
-            "email.txt": "apozharski@gmail.com",
-	    "resume.txt": "TODO: I'll add this later."
+            "email.txt": "",
+	    "cv.txt": ""
         };
         return {
             getInstance: function (options) {
