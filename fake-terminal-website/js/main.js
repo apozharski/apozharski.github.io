@@ -536,7 +536,7 @@ Publications:
 	else
 	{
 	    obj = getLs(this.cwd.concat([cmdComponents[1]]));
-	    if(obj.hasOwnProperty("type"))
+	    if(obj !=== undefined && obj.hasOwnProperty("type"))
 	    {
 		if(obj.type == "text" || obj.type == "link")
 		{
