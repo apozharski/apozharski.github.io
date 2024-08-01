@@ -138,8 +138,29 @@ var main = (function () {
 		     "README.txt":{"content":"ls, cd, and cat work as expected", "type":"text"},
 		     "email.txt":{"content":"anton.pozharskiy@imtek.uni-freiburg.de", "type":"text"},
 		     "mailto":{"content":"mailto:apozharski@gmail.com", "type":"link"},
-		     "resume.txt":{"content":"TODO: I'll add this later.", "type":"text"},
-		     "resume.pdf":{"content":"../files/resume.pdf", "type":"file"},
+		     "cv.txt":{"content": `Anton Edvinovich Pozharskiy
+Contact:
+- Email: anton.pozharskiy@imtek.uni-freiburg.de
+Current Affiliation: PhD student at SYSCOP, IMTEK, Albert-Ludwigs-Universität Freiburg
+
+Education:
+- Master of Science, Embedded Systems Engineering, Albert-Ludwigs-Universität Freiburg (October 2021-November 2023)
+  - Master Thesis: Evaluating Methods for Solving Mathematical Programs With Complementarity Constraints Arising From Nonsmooth Optimal Control
+  - Thesis Grade: 1.1 (German Scale)
+- Bachelor of Science, Computer Science, University of Maryland (October 2016-May 2021)
+- Bachelor of Science, Electrical Engineering, University of Maryland (October 2016-May 2021)
+
+Publications:
+- A. Pozharskiy, A. Nurkanović, and M. Diehl, "Finite Elements with Switch Detection for Numerical Optimal Control of Projected Dynamical Systems," (Accepted: 2024 63rd IEEE Conference on Decision and Control (CDC), Milan, Italy, 2024)
+- A. Nurkanović, J. Frey, A. Pozharskiy, and M. Diehl, "FESD-J: Finite Elements with Switch Detection for numerical optimal control of rigid bodies with impacts and Coulomb friction," Nonlinear Analysis: Hybrid Systems, Volume 52, 2024.
+- A. Nurkanović*, A. Pozharskiy*, and M. Diehl. "Solving mathematical programs with complementarity constraints arising in nonsmooth optimal control," (Accepted, Vietnam Journal of Mathematics, 2024)
+- A. Nurkanović, A. Pozharskiy, J. Frey, and M. Diehl, "Finite Elements with Switch Detection for Numerical Optimal Control of Nonsmooth Dynamical Systems with Set-Valued Step Functions," (Submitted: Nonlinear Analysis: Hybrid Systems)
+- A. Nurkanović, J. Frey, A. Pozharskiy, and M. Diehl, "Finite Elements with Switch Detection for Direct Optimal Control of Nonsmooth Systems with Set-Valued Step Functions," 2023 62nd IEEE Conference on Decision and Control (CDC), Singapore, Singapore, 2023
+- W. Van Roy et al. (including A. Pozharskiy), "Continuous Optimization for Control of Finite-State Machines with Cascaded Hysteresis via Time-Freezing," 2023 62nd IEEE Conference on Decision and Control (CDC), Singapore, Singapore, 2023
+
+*Equal Contribution
+`, "type":"text"},
+		     "resume.pdf":{"content":"files/resume.pdf", "type":"file"},
 		     "projects":
 		     {
 			 "nosnoc":{"content":"https://github.com/nurkanovic/nosnoc","type":"link"},
